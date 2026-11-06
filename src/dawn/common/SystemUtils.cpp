@@ -47,6 +47,12 @@
 #include <mach-o/dyld.h>
 
 #include <vector>
+#elif DAWN_PLATFORM_IS(HAIKU)
+#include <FindDirectory.h>
+#include <dlfcn.h>
+#include <image.h>
+#include <limits.h>
+#include <stdlib.h>
 #endif
 
 #include <array>
@@ -153,6 +159,15 @@ std::optional<std::string> GetExecutablePath() {
 std::optional<std::string> GetExecutablePath() {
     return {};
 }
+#elif DAWN_PLATFORM_IS(HAIKU)
+std::optional<std::string> GetExecutablePath() {
+    std::array<char, PATH_MAX> path = {};
+    if (find_path(B_APP_IMAGE_SYMBOL, B_FIND_PATH_IMAGE_PATH, nullptr, path.data(), PATH_MAX) !=
+        B_OK) {
+        return {};
+    }
+    return path.data();
+}
 #else
 #error "Implement GetExecutablePath for your platform."
 #endif
@@ -169,7 +184,8 @@ std::optional<std::string> GetExecutableDirectory() {
     return exePath->substr(0, lastPathSepLoc + 1);
 }
 
-#if DAWN_PLATFORM_IS(LINUX) || DAWN_PLATFORM_IS(MACOS) || DAWN_PLATFORM_IS(IOS)
+#if DAWN_PLATFORM_IS(LINUX) || DAWN_PLATFORM_IS(MACOS) || DAWN_PLATFORM_IS(IOS) || \
+    DAWN_PLATFORM_IS(HAIKU)
 std::optional<std::string> GetModulePath() {
     static int placeholderSymbol = 0;
     Dl_info dlInfo;

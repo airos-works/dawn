@@ -69,6 +69,8 @@ constexpr char kVulkanLibName[] = "vulkan-1.dll";
 constexpr char kVulkanLibName[] = "libvulkan.dylib";
 #elif DAWN_PLATFORM_IS(FUCHSIA)
 constexpr char kVulkanLibName[] = "libvulkan.so";
+#elif DAWN_PLATFORM_IS(HAIKU)
+constexpr char kVulkanLibName[] = "libvulkan.so.1";
 #else
 #error "Unimplemented Vulkan backend platform"
 #endif

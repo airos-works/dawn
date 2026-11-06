@@ -880,7 +880,7 @@ if (DAWN_ENABLE_VULKAN)
             "vulkan/external_memory/MemoryServiceImplementationAHardwareBuffer.cpp"
             "vulkan/external_semaphore/SemaphoreServiceImplementationFD.cpp"
         )
-    elseif (UNIX AND NOT APPLE)
+    elseif (UNIX AND NOT APPLE AND NOT CMAKE_SYSTEM_NAME STREQUAL "Haiku")
         list(APPEND private_headers
             "vulkan/external_memory/MemoryServiceImplementationDmaBuf.h"
             "vulkan/external_memory/MemoryServiceImplementationOpaqueFD.h"

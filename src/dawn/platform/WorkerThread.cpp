@@ -36,6 +36,8 @@
 
 #if DAWN_PLATFORM_IS(LINUX)
 #include <pthread.h>
+#elif DAWN_PLATFORM_IS(HAIKU)
+#include <OS.h>
 #endif
 
 namespace dawn::platform {
@@ -112,6 +114,8 @@ void AsyncJobHandleImpl::JobThreadLoop(PostWorkerJobCallback cb, void* userdata)
     // Give the worker thread a dedicated name instead of inheriting the spawning thread's name.
     // Linux and Android only: the pthread_setname_np() signature differs on other POSIX platforms.
     pthread_setname_np(pthread_self(), "DawnWorker");
+#elif DAWN_PLATFORM_IS(HAIKU)
+    rename_thread(find_thread(nullptr), "DawnWorker");
 #endif
     JobStatus status = JobStatus::Continue;
     while (!mCancelled && status == JobStatus::Continue) {

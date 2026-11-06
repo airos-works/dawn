@@ -191,7 +191,10 @@ endif()
 if (NOT TARGET renderdoc-api)
     add_library(RenderDocApi INTERFACE)
     target_include_directories(RenderDocApi INTERFACE "renderdoc")
-    target_compile_definitions(RenderDocApi INTERFACE "DAWN_ENABLE_RENDERDOC")
+    # RenderDoc has no Haiku port (and its header rejects unknown platforms).
+    if (NOT CMAKE_SYSTEM_NAME STREQUAL "Haiku")
+        target_compile_definitions(RenderDocApi INTERFACE "DAWN_ENABLE_RENDERDOC")
+    endif()
 endif()
 
 if (DAWN_ENABLE_DESKTOP_GL OR DAWN_ENABLE_OPENGLES)
